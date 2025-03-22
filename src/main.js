@@ -30,7 +30,7 @@ function onInput(event) {
     inputData = event.target.value.trim();
 };
 
-function formSubmit(event) {
+async function formSubmit(event) {
     event.preventDefault();
     const form = event.currentTarget;
 
@@ -38,7 +38,7 @@ function formSubmit(event) {
          iziToast.show({
                 message: 'Fill in the search field!',
                 messageColor: 'white',
-                iconUrl: './public/blocked.svg',
+                iconUrl: '/blocked.svg',
                 position: 'topRight',
                 color: '#ef4040',
          });
@@ -51,17 +51,19 @@ function formSubmit(event) {
     galleryList.innerHTML = "";
     loader.classList.remove("hidden");
 
-    fetchData(options).then(images => {
+    try {
+        const images = await fetchData(options);
         galleryList.insertAdjacentHTML("beforeend", markupImg(images));
         gallery.refresh();
-    })
-        .finally(() => {
-           loader.classList.add("hidden");
-       })
+    } finally {
+        loader.classList.add("hidden");
+    }
 
     form.reset();
     inputData = "";
 }
+
+
 
 
 

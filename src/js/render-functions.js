@@ -9,7 +9,7 @@ export function markupImg(cards) {
     <img
     class="gallery-image"
     src="${card.webformatURL}"
-    alt="${card.tags}"
+    alt="${card.tags.slice(0, 120)}"
     />
     </a>
     <div class="item-subtitle">
