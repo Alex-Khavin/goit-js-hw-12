@@ -8,7 +8,7 @@ export async function fetchData(options) {
         if (!response.data?.hits?.length) {
             throw new Error("Sorry, there are no images matching your search query. Please try again!");
            }
-           return response.data.hits;
+           return response.data;
     } catch (error) {
         iziToast.error({
             message: `${error.message}`,

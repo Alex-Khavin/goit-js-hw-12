@@ -61,13 +61,13 @@ async function formSubmit(event) {
     loader.classList.remove("hidden");
 
     try {
-        const images = await fetchData(options);
+        const {hits: images, totalHits } = await fetchData(options);
            if (images.length === 0) {
             btnLoadMore.classList.add("hidden");
             return;
            }
         
-        totalPages = Math.ceil(500 / options.params.per_page);
+        totalPages = Math.ceil(totalHits / options.params.per_page);
 
         galleryList.insertAdjacentHTML("beforeend", markupImg(images));
         btnLoadMore.classList.remove("hidden");
@@ -88,30 +88,31 @@ async function loadMore() {
     page += 1;
     options.params.page = page;
     loader.classList.remove("hidden");
-
-    if (page > totalPages) {
-        iziToast.error({
-            position: "topRight",
-            message: "We're sorry, but you've reached the end of search results.",
-            messageColor: 'white',
-            color: '#ef4040',
-        });
+    
+    
+    try {
+        const {hits: newImg} = await fetchData(options);
+        galleryList.insertAdjacentHTML("beforeend", markupImg(newImg));
+        gallery.refresh();
+        
+        const itemHeight = document.querySelector(".gallery-item");
+        if (itemHeight) {
+            const cardHeight = itemHeight.getBoundingClientRect().height*2;
+            console.log("🚀 ~ loadMore ~ cardHeight:", cardHeight)
+            window.scrollBy({ top: cardHeight, behavior: "smooth" });
+        }
+        
+        if (page === totalPages) {
+            iziToast.error({
+                position: "topRight",
+                message: "We're sorry, but you've reached the end of search results.",
+                messageColor: 'white',
+                color: '#ef4040',
+            });
         loader.classList.add("hidden");
         btnLoadMore.classList.add("hidden");
         return;
     }
-
-  try {
-      const newImg = await fetchData(options);
-      galleryList.insertAdjacentHTML("beforeend", markupImg(newImg));
-      gallery.refresh();
-
-      const itemHeight = document.querySelector(".gallery-item");
-        if (itemHeight) {
-            const cardHeight = itemHeight.getBoundingClientRect().height;
-            window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
-        }
-
   } catch (error) {
     console.log(error);
   } finally {
