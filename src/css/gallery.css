@@ -102,6 +102,13 @@ button:hover {
   background-color: #6c8cff;
 }
 
+.btn {
+  width: 125px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
 .loader {
   width: 48px;
   height: 48px;
